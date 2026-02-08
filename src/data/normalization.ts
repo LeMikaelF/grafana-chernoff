@@ -1,52 +1,73 @@
 export interface MetricStats {
-  mean: number;
-  stddev: number;
+  median: number;
+  iqr: number;
   min: number;
   max: number;
 }
 
-/** Compute mean and standard deviation for a set of values. */
-export function computeStats(values: number[]): MetricStats {
-  if (values.length === 0) {
-    return { mean: 0, stddev: 0, min: 0, max: 0 };
+/** Compute the value at a given percentile (0-1) from a sorted array. */
+function percentile(sorted: number[], p: number): number {
+  if (sorted.length === 0) {
+    return 0;
   }
-
-  const min = Math.min(...values);
-  const max = Math.max(...values);
-  const mean = values.reduce((s, v) => s + v, 0) / values.length;
-
-  if (values.length === 1) {
-    return { mean, stddev: 0, min, max };
+  if (sorted.length === 1) {
+    return sorted[0];
   }
-
-  const variance = values.reduce((s, v) => s + (v - mean) ** 2, 0) / values.length;
-  const stddev = Math.sqrt(variance);
-
-  return { mean, stddev, min, max };
+  const idx = p * (sorted.length - 1);
+  const lo = Math.floor(idx);
+  const hi = Math.ceil(idx);
+  const frac = idx - lo;
+  return sorted[lo] * (1 - frac) + sorted[hi] * frac;
 }
 
 /**
- * Normalize a value to [0, 1] using z-score normalization.
+ * Compute robust statistics: median and IQR (interquartile range).
+ * Unlike mean/stddev, these are resistant to extreme outliers.
+ */
+export function computeStats(values: number[]): MetricStats {
+  if (values.length === 0) {
+    return { median: 0, iqr: 0, min: 0, max: 0 };
+  }
+
+  const sorted = [...values].sort((a, b) => a - b);
+  const min = sorted[0];
+  const max = sorted[sorted.length - 1];
+  const median = percentile(sorted, 0.5);
+
+  if (values.length === 1) {
+    return { median, iqr: 0, min, max };
+  }
+
+  const q1 = percentile(sorted, 0.25);
+  const q3 = percentile(sorted, 0.75);
+  const iqr = q3 - q1;
+
+  return { median, iqr, min, max };
+}
+
+/**
+ * Normalize a value to [0, 1] using robust z-score normalization.
  *
- * - z = (value - mean) / stddev
- * - Clamped to [-clamp, +clamp] standard deviations
+ * - robustZ = (value - median) / IQR
+ * - Clamped to [-clamp, +clamp]
  * - Then mapped linearly to [0, 1]: -clamp → 0, 0 → 0.5, +clamp → 1
  *
+ * Using median + IQR instead of mean + stddev prevents extreme outliers
+ * from compressing all normal values into a narrow band.
+ *
  * Edge cases:
- * - stddev=0 (all identical) → 0.5 (neutral)
- * - 1 entity → spread evenly using min-max
+ * - IQR=0 (all identical or <=2 entities) → 0.5 (neutral)
  */
 export function normalizeValue(
   value: number,
   stats: MetricStats,
   clamp: number
 ): { normalized: number; zScore: number } {
-  // All identical values → neutral
-  if (stats.stddev === 0) {
+  if (stats.iqr === 0) {
     return { normalized: 0.5, zScore: 0 };
   }
 
-  const zScore = (value - stats.mean) / stats.stddev;
+  const zScore = (value - stats.median) / stats.iqr;
   const clamped = Math.max(-clamp, Math.min(clamp, zScore));
   const normalized = (clamped + clamp) / (2 * clamp);
 
@@ -62,7 +83,6 @@ export function normalizeEntities(
   metricNames: string[],
   clamp: number
 ): Array<{ normalized: Record<string, number>; zScores: Record<string, number> }> {
-  // Compute stats for each metric across all entities
   const stats: Record<string, MetricStats> = {};
   for (const metric of metricNames) {
     const values = entities.map((e) => e.metrics[metric]).filter((v) => v !== undefined && !isNaN(v));
