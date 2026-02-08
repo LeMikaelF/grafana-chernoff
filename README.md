@@ -4,6 +4,8 @@ A Grafana panel plugin that visualizes multivariate data using Chernoff Faces â€
 
 Metrics are auto-mapped to facial features in order of perceptual salience, based on the De Soete & De Corte (1985) ranking of which features humans notice changes in most readily.
 
+![Screenshot](src/img/screenshot.png)
+
 ## Features
 
 - **Salience-aware auto-mapping** â€” most important metrics automatically mapped to most noticeable facial features
