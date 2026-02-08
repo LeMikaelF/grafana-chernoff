@@ -1,0 +1,116 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 1,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "grafana-testdata-datasource",
+        "uid": "trlxrdZVk"
+      },
+      "gridPos": {
+        "h": 20,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "labelField": "server",
+        "groupByField": "region",
+        "metricMappings": [],
+        "zScoreClamp": 3,
+        "showLabels": true,
+        "columns": 0,
+        "maxFaces": 0,
+        "aggregationWindowSeconds": 0
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-testdata-datasource",
+            "uid": "trlxrdZVk"
+          },
+          "refId": "A",
+          "scenarioId": "raw_frame",
+          "rawFrameContent": "[{\"columns\":[{\"text\":\"server\",\"type\":\"string\"},{\"text\":\"region\",\"type\":\"string\"},{\"text\":\"cpu_usage\",\"type\":\"number\"},{\"text\":\"memory_usage\",\"type\":\"number\"},{\"text\":\"disk_io\",\"type\":\"number\"},{\"text\":\"network_in\",\"type\":\"number\"},{\"text\":\"error_rate\",\"type\":\"number\"},{\"text\":\"latency_p99\",\"type\":\"number\"},{\"text\":\"request_rate\",\"type\":\"number\"},{\"text\":\"gc_pause_ms\",\"type\":\"number\"}],\"rows\":[[\"web-east-01\",\"us-east-1\",35,55,15,250,0.08,45,1200,5],[\"web-east-02\",\"us-east-1\",40,58,18,300,0.12,52,1400,6],[\"web-east-03\",\"us-east-1\",42,60,20,280,0.15,450,1100,7],[\"api-east-01\",\"us-east-1\",45,62,12,180,0.10,38,800,8],[\"api-east-02\",\"us-east-1\",85,96,25,200,0.30,65,600,12],[\"db-east-01\",\"us-east-1\",50,70,45,100,0.02,30,500,4],[\"db-east-02\",\"us-east-1\",92,75,180,120,0.05,55,450,5],[\"cache-east-01\",\"us-east-1\",25,45,8,400,0.01,12,1800,3],[\"web-west-01\",\"us-west-2\",38,52,16,270,0.09,48,1300,5],[\"web-west-02\",\"us-west-2\",33,50,14,230,0.07,42,1150,6],[\"api-west-01\",\"us-west-2\",48,65,14,190,0.11,40,850,7],[\"api-west-02\",\"us-west-2\",55,68,16,350,8.50,75,1500,9],[\"db-west-01\",\"us-west-2\",52,72,48,110,0.03,32,520,4],[\"cache-west-01\",\"us-west-2\",22,42,7,380,0.01,10,1900,3],[\"web-eu-01\",\"eu-west-1\",37,54,17,260,0.10,50,1250,5],[\"web-eu-02\",\"eu-west-1\",41,57,19,290,0.11,55,1350,6],[\"api-eu-01\",\"eu-west-1\",46,63,13,185,0.09,42,820,8],[\"db-eu-01\",\"eu-west-1\",48,68,42,95,0.02,28,480,4],[\"db-eu-02\",\"eu-west-1\",60,74,120,105,0.08,380,350,5],[\"cache-eu-01\",\"eu-west-1\",24,44,9,410,0.01,11,1850,3],[\"web-ap-01\",\"ap-south-1\",36,53,15,240,0.10,55,1100,6],[\"api-ap-01\",\"ap-south-1\",44,61,11,175,0.08,44,780,7],[\"db-ap-01\",\"ap-south-1\",51,71,44,98,0.03,35,490,4],[\"worker-ap-01\",\"ap-south-1\",78,72,30,80,0.20,60,200,85]]}]"
+        }
+      ],
+      "title": "Server Fleet Overview",
+      "description": "24 servers across 4 regions with 8 metrics auto-mapped to facial features by perceptual salience",
+      "type": "mfrancoeur-chernofffaces-panel"
+    },
+    {
+      "datasource": {
+        "type": "grafana-testdata-datasource",
+        "uid": "trlxrdZVk"
+      },
+      "gridPos": {
+        "h": 20,
+        "w": 24,
+        "x": 0,
+        "y": 20
+      },
+      "id": 2,
+      "options": {
+        "labelField": "server",
+        "groupByField": "region",
+        "metricMappings": [],
+        "zScoreClamp": 1.5,
+        "showLabels": true,
+        "columns": 0,
+        "maxFaces": 0,
+        "aggregationWindowSeconds": 0
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-testdata-datasource",
+            "uid": "trlxrdZVk"
+          },
+          "refId": "A",
+          "scenarioId": "raw_frame",
+          "rawFrameContent": "[{\"columns\":[{\"text\":\"server\",\"type\":\"string\"},{\"text\":\"region\",\"type\":\"string\"},{\"text\":\"cpu_usage\",\"type\":\"number\"},{\"text\":\"memory_usage\",\"type\":\"number\"},{\"text\":\"disk_io\",\"type\":\"number\"},{\"text\":\"network_in\",\"type\":\"number\"},{\"text\":\"error_rate\",\"type\":\"number\"},{\"text\":\"latency_p99\",\"type\":\"number\"},{\"text\":\"request_rate\",\"type\":\"number\"},{\"text\":\"gc_pause_ms\",\"type\":\"number\"}],\"rows\":[[\"web-east-01\",\"us-east-1\",35,55,15,250,0.08,45,1200,5],[\"web-east-02\",\"us-east-1\",40,58,18,300,0.12,52,1400,6],[\"web-east-03\",\"us-east-1\",42,60,20,280,0.15,450,1100,7],[\"api-east-01\",\"us-east-1\",45,62,12,180,0.10,38,800,8],[\"api-east-02\",\"us-east-1\",85,96,25,200,0.30,65,600,12],[\"db-east-01\",\"us-east-1\",50,70,45,100,0.02,30,500,4],[\"db-east-02\",\"us-east-1\",92,75,180,120,0.05,55,450,5],[\"cache-east-01\",\"us-east-1\",25,45,8,400,0.01,12,1800,3],[\"web-west-01\",\"us-west-2\",38,52,16,270,0.09,48,1300,5],[\"web-west-02\",\"us-west-2\",33,50,14,230,0.07,42,1150,6],[\"api-west-01\",\"us-west-2\",48,65,14,190,0.11,40,850,7],[\"api-west-02\",\"us-west-2\",55,68,16,350,8.50,75,1500,9],[\"db-west-01\",\"us-west-2\",52,72,48,110,0.03,32,520,4],[\"cache-west-01\",\"us-west-2\",22,42,7,380,0.01,10,1900,3],[\"web-eu-01\",\"eu-west-1\",37,54,17,260,0.10,50,1250,5],[\"web-eu-02\",\"eu-west-1\",41,57,19,290,0.11,55,1350,6],[\"api-eu-01\",\"eu-west-1\",46,63,13,185,0.09,42,820,8],[\"db-eu-01\",\"eu-west-1\",48,68,42,95,0.02,28,480,4],[\"db-eu-02\",\"eu-west-1\",60,74,120,105,0.08,380,350,5],[\"cache-eu-01\",\"eu-west-1\",24,44,9,410,0.01,11,1850,3],[\"web-ap-01\",\"ap-south-1\",36,53,15,240,0.10,55,1100,6],[\"api-ap-01\",\"ap-south-1\",44,61,11,175,0.08,44,780,7],[\"db-ap-01\",\"ap-south-1\",51,71,44,98,0.03,35,490,4],[\"worker-ap-01\",\"ap-south-1\",78,72,30,80,0.20,60,200,85]]}]"
+        }
+      ],
+      "title": "Outlier Detection (Exaggerated)",
+      "description": "Same data with zScoreClamp=1.5 for more exaggerated facial feature differences",
+      "type": "mfrancoeur-chernofffaces-panel"
+    }
+  ],
+  "refresh": "",
+  "schemaVersion": 39,
+  "tags": ["chernoff", "monitoring"],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Chernoff Faces — Server Fleet",
+  "uid": "chernoff-faces-demo",
+  "version": 1,
+  "weekStart": ""
+}
