@@ -8,7 +8,7 @@ export interface FaceParams {
   mouthCurvature: number;  // 0=frown, 0.5=neutral, 1=smile
   faceHeight: number;      // 0=small, 0.5=normal, 1=tall
   eyeSize: number;         // 0=tiny, 0.5=normal, 1=large
-  eyebrowLength: number;   // 0=short, 0.5=normal, 1=long
+  eyebrowSlant: number;    // 0=angry V, 0.5=flat, 1=worried/raised
   noseLength: number;      // 0=short, 0.5=normal, 1=long
   mouthWidth: number;      // 0=narrow, 0.5=normal, 1=wide
   faceWidth: number;       // 0=narrow, 0.5=normal, 1=wide
@@ -26,7 +26,7 @@ export const NEUTRAL_FACE: FaceParams = {
   mouthCurvature: 0.5,
   faceHeight: 0.5,
   eyeSize: 0.5,
-  eyebrowLength: 0.5,
+  eyebrowSlant: 0.5,
   noseLength: 0.5,
   mouthWidth: 0.5,
   faceWidth: 0.5,
@@ -38,7 +38,7 @@ export const SALIENCE_ORDER: ReadonlyArray<keyof FaceParams> = [
   'mouthCurvature',
   'faceHeight',
   'eyeSize',
-  'eyebrowLength',
+  'eyebrowSlant',
   'noseLength',
   'mouthWidth',
   'faceWidth',

@@ -10,7 +10,7 @@ interface FaceGridProps {
   renderer: FaceRenderer;
   showLabels: boolean;
   columns: number;
-  onHover?: (entity: FaceEntity, rect: DOMRect) => void;
+  onHover?: (entity: FaceEntity, mouseX: number, mouseY: number) => void;
   onLeave?: () => void;
 }
 

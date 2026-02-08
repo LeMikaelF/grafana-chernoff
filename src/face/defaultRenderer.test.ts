@@ -20,7 +20,7 @@ describe('DefaultChernoffRenderer', () => {
       mouthCurvature: 0,
       faceHeight: 1,
       eyeSize: 1,
-      eyebrowLength: 0,
+      eyebrowSlant: 0,
       noseLength: 1,
       mouthWidth: 0,
       faceWidth: 1,
@@ -50,9 +50,11 @@ describe('DefaultChernoffRenderer', () => {
     const happyParts = React.Children.toArray(happyG.props.children) as React.ReactElement[];
     const sadParts = React.Children.toArray(sadG.props.children) as React.ReactElement[];
 
-    // Find the path element (mouth) — it's the last child
-    const happyMouth = happyParts.find((c) => c.type === 'path');
-    const sadMouth = sadParts.find((c) => c.type === 'path');
+    // Find the mouth path — it's the last path element (nose is also a path now)
+    const happyPaths = happyParts.filter((c) => c.type === 'path');
+    const sadPaths = sadParts.filter((c) => c.type === 'path');
+    const happyMouth = happyPaths[happyPaths.length - 1];
+    const sadMouth = sadPaths[sadPaths.length - 1];
 
     expect(happyMouth).toBeTruthy();
     expect(sadMouth).toBeTruthy();

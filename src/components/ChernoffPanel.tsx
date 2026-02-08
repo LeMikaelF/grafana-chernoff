@@ -68,9 +68,9 @@ export const ChernoffPanel: React.FC<Props> = ({ options, data, width }) => {
     return resolveMetricMappings(Array.from(allMetrics), options.metricMappings);
   }, [groups, options.metricMappings]);
 
-  const handleHover = useCallback((entity: FaceEntity, rect: DOMRect) => {
+  const handleHover = useCallback((entity: FaceEntity, mouseX: number, mouseY: number) => {
     setHoveredEntity(entity);
-    setTooltipPos({ x: rect.right, y: rect.top });
+    setTooltipPos({ x: mouseX, y: mouseY });
   }, []);
 
   const handleLeave = useCallback(() => {

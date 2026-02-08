@@ -1,16 +1,20 @@
-# Grafana panel plugin template
+# Grafana Chernoff Faces Panel Plugin
 
-This template is a starting point for building a panel plugin for Grafana.
+A Grafana panel plugin that visualizes multivariate data using Chernoff Faces — a technique where data dimensions are mapped to facial features, exploiting humans' innate ability to recognize subtle differences in faces. The primary use case is monitoring fleets of entities (servers, services, pods, etc.) and spotting outliers at a glance by seeing which faces "look weird."
 
-## What are Grafana panel plugins?
+Metrics are auto-mapped to facial features in order of perceptual salience, based on the De Soete & De Corte (1985) ranking of which features humans notice changes in most readily.
 
-Panel plugins allow you to add new types of visualizations to your dashboard, such as maps, clocks, pie charts, lists, and more.
+## Features
 
-Use panel plugins when you want to do things like visualize data returned by data source queries, navigate between dashboards, or control external systems (such as smart home devices).
+- **Salience-aware auto-mapping** — most important metrics automatically mapped to most noticeable facial features
+- **Z-score normalization** — mean becomes the neutral face, deviations become exaggerated features
+- **Data source agnostic** — works with any Grafana data source (table or multi-series format)
+- **Monochrome line drawings** — uses `currentColor` to adapt to Grafana light/dark themes
+- **Grouping** — group faces by region, namespace, or any label field
+- **Hover tooltips** — see raw metric values and z-scores for each entity
+- **Configurable** — manual metric-to-feature mapping, z-score clamping, column layout
 
 ## Getting started
-
-### Frontend
 
 1. Install dependencies
 
@@ -24,94 +28,36 @@ Use panel plugins when you want to do things like visualize data returned by dat
    npm run dev
    ```
 
-3. Build plugin in production mode
+3. Spin up Grafana with the plugin and a provisioned demo dashboard
 
    ```bash
-   npm run build
+   npm run server
    ```
 
-4. Run the tests (using Jest)
+4. Open http://localhost:3000 — the "Chernoff Faces — Server Fleet" dashboard shows 24 servers across 4 regions with 6 outliers.
+
+5. Run the tests
 
    ```bash
-   # Runs the tests and watches for changes, requires git init first
-   npm run test
-
-   # Exits after running all the tests
    npm run test:ci
    ```
 
-5. Spin up a Grafana instance and run the plugin inside it (using Docker)
+## Facial Features (by salience rank)
 
-   ```bash
-   npm run server
-   ```
+| Rank | Feature          | Param range                              |
+|------|------------------|------------------------------------------|
+| 1    | Mouth curvature  | 0 = frown, 0.5 = neutral, 1 = smile     |
+| 2    | Face height      | 0 = short, 0.5 = normal, 1 = tall       |
+| 3    | Eye size         | 0 = tiny, 0.5 = normal, 1 = large       |
+| 4    | Eyebrow slant    | 0 = angry V, 0.5 = flat, 1 = worried    |
+| 5    | Nose length      | 0 = short, 0.5 = normal, 1 = long       |
+| 6    | Mouth width      | 0 = narrow, 0.5 = normal, 1 = wide      |
+| 7    | Face width       | 0 = narrow, 0.5 = normal, 1 = wide      |
+| 8    | Eye position     | 0 = low, 0.5 = normal, 1 = high         |
 
-6. Run the E2E tests (using Playwright)
+## References
 
-   ```bash
-   # Spins up a Grafana instance first that we tests against
-   npm run server
-
-   # If you wish to start a certain Grafana version. If not specified will use latest by default
-   GRAFANA_VERSION=11.3.0 npm run server
-
-   # Starts the tests
-   npm run e2e
-   ```
-
-7. Run the linter
-
-   ```bash
-   npm run lint
-
-   # or
-
-   npm run lint:fix
-   ```
-
-# Distributing your plugin
-
-When distributing a Grafana plugin either within the community or privately the plugin must be signed so the Grafana application can verify its authenticity. This can be done with the `@grafana/sign-plugin` package.
-
-_Note: It's not necessary to sign a plugin during development. The docker development environment that is scaffolded with `@grafana/create-plugin` caters for running the plugin without a signature._
-
-## Initial steps
-
-Before signing a plugin please read the Grafana [plugin publishing and signing criteria](https://grafana.com/legal/plugins/#plugin-publishing-and-signing-criteria) documentation carefully.
-
-`@grafana/create-plugin` has added the necessary commands and workflows to make signing and distributing a plugin via the grafana plugins catalog as straightforward as possible.
-
-Before signing a plugin for the first time please consult the Grafana [plugin signature levels](https://grafana.com/legal/plugins/#what-are-the-different-classifications-of-plugins) documentation to understand the differences between the types of signature level.
-
-1. Create a [Grafana Cloud account](https://grafana.com/signup).
-2. Make sure that the first part of the plugin ID matches the slug of your Grafana Cloud account.
-   - _You can find the plugin ID in the `plugin.json` file inside your plugin directory. For example, if your account slug is `acmecorp`, you need to prefix the plugin ID with `acmecorp-`._
-3. Create a Grafana Cloud API key with the `PluginPublisher` role.
-4. Keep a record of this API key as it will be required for signing a plugin
-
-## Signing a plugin
-
-### Using Github actions release workflow
-
-If the plugin is using the github actions supplied with `@grafana/create-plugin` signing a plugin is included out of the box. The [release workflow](./.github/workflows/release.yml) can prepare everything to make submitting your plugin to Grafana as easy as possible. Before being able to sign the plugin however a secret needs adding to the Github repository.
-
-1. Please navigate to "settings > secrets > actions" within your repo to create secrets.
-2. Click "New repository secret"
-3. Name the secret "GRAFANA_API_KEY"
-4. Paste your Grafana Cloud API key in the Secret field
-5. Click "Add secret"
-
-#### Push a version tag
-
-To trigger the workflow we need to push a version tag to github. This can be achieved with the following steps:
-
-1. Run `npm version <major|minor|patch>`
-2. Run `git push origin main --follow-tags`
-
-## Learn more
-
-Below you can find source code for existing app plugins and other related documentation.
-
-- [Basic panel plugin example](https://github.com/grafana/grafana-plugin-examples/tree/master/examples/panel-basic#readme)
-- [`plugin.json` documentation](https://grafana.com/developers/plugin-tools/reference/plugin-json)
-- [How to sign a plugin?](https://grafana.com/developers/plugin-tools/publish-a-plugin/sign-a-plugin)
+1. Chernoff, H. (1973). "The Use of Faces to Represent Points in k-Dimensional Space Graphically." *Journal of the American Statistical Association*, 68(342), 361-368.
+2. De Soete, G. & De Corte, W. (1985). "On the Perceptual Salience of Features of Chernoff Faces for Representing Multivariate Data." *Applied Psychological Measurement*, 9(3), 275-285.
+3. Chernoff, H. & Rizvi, M.H. (1975). "Effect on classification error of random permutations of features in representing multivariate data by faces." *JASA*, 70(351).
+4. Flury, B. & Riedwyl, H. (1981). "Graphical Representation of Multivariate Data by Means of Asymmetrical Faces." *JASA*, 76(376).

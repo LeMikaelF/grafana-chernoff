@@ -25,7 +25,7 @@ export interface FaceGeometry {
   rightPupil: { cx: number; cy: number; r: number };
   leftEyebrow: { x1: number; y1: number; x2: number; y2: number };
   rightEyebrow: { x1: number; y1: number; x2: number; y2: number };
-  nose: { x1: number; y1: number; x2: number; y2: number };
+  nose: { path: string };
   mouth: { path: string };
 }
 
@@ -34,7 +34,7 @@ export function computeGeometry(params: FaceParams): FaceGeometry {
     mouthCurvature: clamp(params.mouthCurvature, 0, 1),
     faceHeight: clamp(params.faceHeight, 0, 1),
     eyeSize: clamp(params.eyeSize, 0, 1),
-    eyebrowLength: clamp(params.eyebrowLength, 0, 1),
+    eyebrowSlant: clamp(params.eyebrowSlant, 0, 1),
     noseLength: clamp(params.noseLength, 0, 1),
     mouthWidth: clamp(params.mouthWidth, 0, 1),
     faceWidth: clamp(params.faceWidth, 0, 1),
@@ -50,23 +50,35 @@ export function computeGeometry(params: FaceParams): FaceGeometry {
   const eyeSpacing = faceRx * 0.45;
 
   // Eye size
-  const eyeR = lerp(3, 8, p.eyeSize);
+  const eyeR = lerp(2, 10, p.eyeSize);
   const pupilR = eyeR * 0.45;
 
-  // Eyebrow length
-  const browHalfLen = lerp(5, 14, p.eyebrowLength);
-  const browY = eyeY - eyeR - 4;
+  // Eyebrow slant: 0 = angry V (inner end high, outer end low)
+  //                0.5 = flat
+  //                1 = worried (inner end low, outer end high)
+  const browHalfLen = 10;
+  const browCenterY = eyeY - eyeR - 5;
+  // Tilt: negative = inner end higher (angry), positive = outer end higher (worried)
+  const browTilt = lerp(-6, 6, p.eyebrowSlant);
 
-  // Nose
+  // Nose — triangle/wedge shape
   const noseTop = lerp(-2, -8, p.noseLength * 0.5 + 0.25);
-  const noseBottom = lerp(5, 15, p.noseLength);
+  const noseBottom = lerp(5, 18, p.noseLength);
+  const noseHalfWidth = lerp(2, 5, p.noseLength);
+  const nosePath = [
+    `M 0 ${noseTop}`,
+    `L ${-noseHalfWidth} ${noseBottom}`,
+    `L ${noseHalfWidth} ${noseBottom}`,
+  ].join(' ');
 
-  // Mouth
-  const mouthHalfW = lerp(6, 18, p.mouthWidth);
+  // Mouth — cubic bezier with wider curvature range
+  const mouthHalfW = lerp(6, 20, p.mouthWidth);
   const mouthY = lerp(faceRy * 0.35, faceRy * 0.55, 0.5);
-  // Curvature: 0 = frown (control point below), 0.5 = flat, 1 = smile (control point above)
-  const curvature = lerp(10, -10, p.mouthCurvature);
-  const mouthPath = `M ${-mouthHalfW} ${mouthY} Q 0 ${mouthY + curvature} ${mouthHalfW} ${mouthY}`;
+  // Curvature: 0 = deep frown, 0.5 = flat, 1 = big smile
+  const curvature = lerp(14, -14, p.mouthCurvature);
+  // Cubic bezier with two control points for a more pronounced curve
+  const cpX = mouthHalfW * 0.4;
+  const mouthPath = `M ${-mouthHalfW} ${mouthY} C ${-cpX} ${mouthY + curvature} ${cpX} ${mouthY + curvature} ${mouthHalfW} ${mouthY}`;
 
   return {
     faceOutline: { cx: 0, cy: 0, rx: faceRx, ry: faceRy },
@@ -74,19 +86,21 @@ export function computeGeometry(params: FaceParams): FaceGeometry {
     rightEye: { cx: eyeSpacing, cy: eyeY, r: eyeR },
     leftPupil: { cx: -eyeSpacing, cy: eyeY, r: pupilR },
     rightPupil: { cx: eyeSpacing, cy: eyeY, r: pupilR },
+    // Left eyebrow: inner end is closer to center, outer end is further
     leftEyebrow: {
-      x1: -eyeSpacing - browHalfLen,
-      y1: browY,
-      x2: -eyeSpacing + browHalfLen,
-      y2: browY,
+      x1: -eyeSpacing + browHalfLen,
+      y1: browCenterY + browTilt,
+      x2: -eyeSpacing - browHalfLen,
+      y2: browCenterY - browTilt,
     },
+    // Right eyebrow: mirrored
     rightEyebrow: {
       x1: eyeSpacing - browHalfLen,
-      y1: browY,
+      y1: browCenterY + browTilt,
       x2: eyeSpacing + browHalfLen,
-      y2: browY,
+      y2: browCenterY - browTilt,
     },
-    nose: { x1: 0, y1: noseTop, x2: 0, y2: noseBottom },
+    nose: { path: nosePath },
     mouth: { path: mouthPath },
   };
 }

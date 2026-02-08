@@ -12,7 +12,7 @@ export const FEATURES: readonly FeatureInfo[] = [
   { key: 'mouthCurvature', label: 'Mouth curvature', salienceRank: 1, description: 'Smile/frown' },
   { key: 'faceHeight', label: 'Face height', salienceRank: 2, description: 'Overall face size' },
   { key: 'eyeSize', label: 'Eye size', salienceRank: 3, description: 'Eye radius' },
-  { key: 'eyebrowLength', label: 'Eyebrow length', salienceRank: 4, description: 'Eyebrow width' },
+  { key: 'eyebrowSlant', label: 'Eyebrow slant', salienceRank: 4, description: 'Angry V to worried raise' },
   { key: 'noseLength', label: 'Nose length', salienceRank: 5, description: 'Nose vertical extent' },
   { key: 'mouthWidth', label: 'Mouth width', salienceRank: 6, description: 'Mouth horizontal extent' },
   { key: 'faceWidth', label: 'Face width', salienceRank: 7, description: 'Face horizontal extent' },

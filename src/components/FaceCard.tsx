@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback } from 'react';
 import { css } from '@emotion/css';
 import { useStyles2 } from '@grafana/ui';
 import { FaceEntity } from '../types';
@@ -9,7 +9,7 @@ interface FaceCardProps {
   renderer: FaceRenderer;
   showLabel: boolean;
   size: number;
-  onHover?: (entity: FaceEntity, rect: DOMRect) => void;
+  onHover?: (entity: FaceEntity, mouseX: number, mouseY: number) => void;
   onLeave?: () => void;
 }
 
@@ -54,19 +54,20 @@ export const FaceCard: React.FC<FaceCardProps> = ({
   onLeave,
 }) => {
   const styles = useStyles2(() => getStyles(size));
-  const cardRef = useRef<HTMLDivElement>(null);
 
-  const handleMouseEnter = useCallback(() => {
-    if (onHover && cardRef.current) {
-      onHover(entity, cardRef.current.getBoundingClientRect());
-    }
-  }, [entity, onHover]);
+  const handleMouseMove = useCallback(
+    (e: React.MouseEvent) => {
+      if (onHover) {
+        onHover(entity, e.clientX, e.clientY);
+      }
+    },
+    [entity, onHover]
+  );
 
   return (
     <div
-      ref={cardRef}
       className={styles.card}
-      onMouseEnter={handleMouseEnter}
+      onMouseMove={handleMouseMove}
       onMouseLeave={onLeave}
       data-testid={`face-card-${entity.label}`}
     >

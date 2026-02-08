@@ -84,15 +84,13 @@ export class DefaultChernoffRenderer implements FaceRenderer {
           x2: g.rightEyebrow.x2,
           y2: g.rightEyebrow.y2,
         }),
-        // Nose
-        React.createElement('line', {
+        // Nose (triangle)
+        React.createElement('path', {
           key: 'nose',
-          x1: g.nose.x1,
-          y1: g.nose.y1,
-          x2: g.nose.x2,
-          y2: g.nose.y2,
+          d: g.nose.path,
+          fill: 'none',
         }),
-        // Mouth (quadratic bezier)
+        // Mouth (cubic bezier)
         React.createElement('path', {
           key: 'mouth',
           d: g.mouth.path,

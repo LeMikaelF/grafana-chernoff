@@ -47,13 +47,12 @@ describe('computeGeometry', () => {
     expect(g.leftPupil.cy).toBe(g.leftEye.cy);
     expect(g.rightPupil.cx).toBe(g.rightEye.cx);
 
-    // Eyebrows symmetric
-    expect(g.leftEyebrow.y1).toBe(g.rightEyebrow.y1);
+    // Eyebrows symmetric and flat at neutral
+    expect(g.leftEyebrow.y1).toBe(g.leftEyebrow.y2);
+    expect(g.rightEyebrow.y1).toBe(g.rightEyebrow.y2);
 
-    // Nose centered vertically
-    expect(g.nose.x1).toBe(0);
-    expect(g.nose.x2).toBe(0);
-    expect(g.nose.y1).toBeLessThan(g.nose.y2);
+    // Nose path exists and is centered
+    expect(g.nose.path).toContain('M 0');
   });
 
   it('produces wider face with faceWidth=1', () => {
@@ -78,13 +77,28 @@ describe('computeGeometry', () => {
     expect(large.rightEye.r).toBeGreaterThan(small.rightEye.r);
   });
 
-  it('produces longer nose with noseLength=1', () => {
+  it('produces longer nose path with noseLength=1', () => {
     const long = computeGeometry({ ...NEUTRAL_FACE, noseLength: 1 });
     const short = computeGeometry({ ...NEUTRAL_FACE, noseLength: 0 });
 
-    const longLen = long.nose.y2 - long.nose.y1;
-    const shortLen = short.nose.y2 - short.nose.y1;
-    expect(longLen).toBeGreaterThan(shortLen);
+    // Longer nose produces a wider triangle base
+    expect(long.nose.path).not.toBe(short.nose.path);
+  });
+
+  it('produces tilted eyebrows with eyebrowSlant extremes', () => {
+    const angry = computeGeometry({ ...NEUTRAL_FACE, eyebrowSlant: 0 });
+    const worried = computeGeometry({ ...NEUTRAL_FACE, eyebrowSlant: 1 });
+
+    // Angry: inner end (x1) is higher (smaller y) than outer end (x2) for left brow
+    expect(angry.leftEyebrow.y1).toBeLessThan(angry.leftEyebrow.y2);
+    // Worried: inner end (x1) is lower (larger y) than outer end (x2)
+    expect(worried.leftEyebrow.y1).toBeGreaterThan(worried.leftEyebrow.y2);
+  });
+
+  it('produces flat eyebrows at neutral slant', () => {
+    const g = computeGeometry(NEUTRAL_FACE);
+    expect(g.leftEyebrow.y1).toBe(g.leftEyebrow.y2);
+    expect(g.rightEyebrow.y1).toBe(g.rightEyebrow.y2);
   });
 
   it('clamps out-of-range params', () => {
@@ -92,7 +106,7 @@ describe('computeGeometry', () => {
       mouthCurvature: 2,
       faceHeight: -1,
       eyeSize: 5,
-      eyebrowLength: -3,
+      eyebrowSlant: -3,
       noseLength: 10,
       mouthWidth: -0.5,
       faceWidth: 1.5,
