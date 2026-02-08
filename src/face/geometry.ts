@@ -61,16 +61,16 @@ export function computeGeometry(params: FaceParams): FaceGeometry {
   // Tilt: negative = inner end higher (angry), positive = outer end higher (worried)
   const browTilt = lerp(-6, 6, p.eyebrowSlant);
 
-  // Nose — vertical line with a bulb at the bottom
-  // Short nose = tiny, long nose = prominent with wide bulb
-  const noseTop = lerp(0, -6, p.noseLength);
-  const noseBottom = lerp(4, 20, p.noseLength);
-  const bulbRadius = lerp(1.5, 6, p.noseLength);
+  // Nose — triangle that scales dramatically with noseLength
+  // 0 = tiny nub, 1 = large prominent triangle
+  const noseTop = lerp(2, -8, p.noseLength);
+  const noseBottom = lerp(6, 22, p.noseLength);
+  const noseHalfWidth = lerp(1, 10, p.noseLength);
   const nosePath = [
     `M 0 ${noseTop}`,
-    `L 0 ${noseBottom - bulbRadius}`,
-    `Q ${-bulbRadius} ${noseBottom} 0 ${noseBottom}`,
-    `Q ${bulbRadius} ${noseBottom} 0 ${noseBottom - bulbRadius}`,
+    `L ${-noseHalfWidth} ${noseBottom}`,
+    `L ${noseHalfWidth} ${noseBottom}`,
+    'Z',
   ].join(' ');
 
   // Mouth — cubic bezier with wider curvature range
