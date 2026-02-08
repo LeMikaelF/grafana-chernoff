@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useCallback } from 'react';
 import { PanelProps } from '@grafana/data';
 import { css } from '@emotion/css';
-import { useStyles2 } from '@grafana/ui';
+import { Portal, useStyles2 } from '@grafana/ui';
 import { ChernoffOptions, FaceEntity, MetricMapping } from '../types';
 import { processData } from '../data/pipeline';
 import { resolveMetricMappings } from '../data/autoMapping';
@@ -101,11 +101,13 @@ export const ChernoffPanel: React.FC<Props> = ({ options, data, width }) => {
       ))}
 
       {hoveredEntity && (
-        <Tooltip
-          entity={hoveredEntity}
-          mappings={mappings}
-          position={tooltipPos}
-        />
+        <Portal>
+          <Tooltip
+            entity={hoveredEntity}
+            mappings={mappings}
+            position={tooltipPos}
+          />
+        </Portal>
       )}
     </div>
   );
