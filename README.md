@@ -7,7 +7,7 @@ Metrics are auto-mapped to facial features in order of perceptual salience, base
 ## Features
 
 - **Salience-aware auto-mapping** — most important metrics automatically mapped to most noticeable facial features
-- **Z-score normalization** — mean becomes the neutral face, deviations become exaggerated features
+- **Robust normalization** — median + IQR so extreme outliers don't compress normal variation; median becomes the neutral face
 - **Data source agnostic** — works with any Grafana data source (table or multi-series format)
 - **Monochrome line drawings** — uses `currentColor` to adapt to Grafana light/dark themes
 - **Grouping** — group faces by region, namespace, or any label field
